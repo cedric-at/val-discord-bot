@@ -50,8 +50,9 @@ client.on("messageCreate", async (message) => {
     const content = message.content.toLowerCase();
 
     if (
-        content.includes("val") ||
-        content.includes("valo")
+        content === "!queue" ||
+        content === "!val" ||
+        content === "!valo"
     ) {
 
         const channelId = message.channel.id;
@@ -98,17 +99,25 @@ client.on("messageCreate", async (message) => {
         });
 
         setTimeout(async () => {
-            if (!activeQueues.has(channelId)) return;
+            const queue = activeQueues.get(channelId);
 
-            try {
-                await queueMessage.delete();
-            } catch { }
+            if (!queue) return;
 
             activeQueues.delete(channelId);
 
-            message.channel.send(
-                "⌛ Valorant queue expired after 1 hour."
-            );
+            if (queue.players.length >= 2) {
+                message.channel.send(
+                    "🔥 Time to queue."
+                );
+            } else {
+                try {
+                    await queueMessage.delete();
+                } catch {}
+
+                message.channel.send(
+                    "❌ Queue failed. Not enough players joined."
+                );
+            }
         }, 60 * 60 * 1000);
     }
 });
