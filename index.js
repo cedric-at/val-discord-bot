@@ -266,20 +266,20 @@ function updateDateTimeChannels(client) {
 
 client.once("clientReady", async () => {
     console.log(`Logged in as ${client.user.tag}`);
-    
-    // debug
-    const channel = client.channels.cache.get("1567048907907670066");
 
-    console.log("Channel:", channel);
-    console.log("Guild:", channel?.guild?.name);
+    // // debug
+    // const channel = client.channels.cache.get("1567048907907670066");
 
-    console.log(
-        "Manage Channels:",
-        channel
-            ?.permissionsFor(channel.guild.members.me)
-            ?.has("ManageChannels")
-    );
-    // end debug
+    // console.log("Channel:", channel);
+    // console.log("Guild:", channel?.guild?.name);
+
+    // console.log(
+    //     "Manage Channels:",
+    //     channel
+    //         ?.permissionsFor(channel.guild.members.me)
+    //         ?.has("ManageChannels")
+    // );
+    // // end debug
 
     client.user.setActivity("!queue | !val | !valo", {
         type: ActivityType.Listening,
