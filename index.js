@@ -6,7 +6,8 @@ const {
     EmbedBuilder,
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonStyle
+    ButtonStyle,
+    ActivityType
 } = require("discord.js");
 
 const client = new Client({
@@ -229,6 +230,10 @@ client.on("interactionCreate", async (interaction) => {
 
 client.once("clientReady", () => {
     console.log(`Logged in as ${client.user.tag}`);
+
+    client.user.setActivity("!queue | !val | !valo", {
+    type: ActivityType.Listening,
+});
 });
 
 client.login(process.env.TOKEN);
