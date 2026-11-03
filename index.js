@@ -119,7 +119,7 @@ client.on("messageCreate", async (message) => {
                     "❌ Queue failed. Not enough players joined."
                 );
             }
-        }, 60 * 60 * 1000);
+        }, 5 * 60 * 1000);
     }
 });
 
@@ -228,12 +228,56 @@ client.on("interactionCreate", async (interaction) => {
     }
 });
 
-client.once("clientReady", () => {
+
+// ---------- DAY DATE AND TIME CHANNELS ----------
+const DATE_CHANNEL_ID = "1567048907907670066";
+const TIME_CHANNEL_ID = "1567050676528357476";
+
+function updateDateTimeChannels(client) {
+    const dateChannel = client.channels.cache.get(DATE_CHANNEL_ID);
+    const timeChannel = client.channels.cache.get(TIME_CHANNEL_ID);
+
+    if (!dateChannel || !timeChannel) return;
+
+    const now = new Date();
+
+    const dateText = now.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "short",
+        day: "numeric",
+        timeZone: "Asia/Taipei"
+    });
+
+    const timeText = now.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "Asia/Taipei"
+    });
+
+    dateChannel.setName(`📅 ${dateText}`)
+        .catch(console.error);
+
+    timeChannel.setName(`🕒 ${timeText} CST`)
+        .catch(console.error);
+}
+// ---------- DAY DATE AND TIME CHANNELS ----------
+
+
+client.once("clientReady", async () => {
     console.log(`Logged in as ${client.user.tag}`);
 
     client.user.setActivity("!queue | !val | !valo", {
-    type: ActivityType.Listening,
-});
+        type: ActivityType.Listening,
+    });
+
+    // Update immediately on startup
+    await updateDateTimeChannels(client);
+
+    // Update every 5 minutes
+    setInterval(() => {
+        updateDateTimeChannels(client);
+    }, 5 * 60 * 1000);
 });
 
 client.login(process.env.TOKEN);
